@@ -1,0 +1,11 @@
+.global {
+    width: 1200px;
+    height: 800px;
+    background-color: white;
+}
+
+.add_div {
+    width: 100px;
+    height: 100px;
+    background-color: brown;
+}
