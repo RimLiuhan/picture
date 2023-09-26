@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>弹球游戏</title>
+    <title>弹球游戏2.0</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
         body {
@@ -35,20 +35,32 @@
             border-radius: 5px;
             background-color: red;
         }
+        .button {
+            position: absolute;
+        }
     </style>
 </head>
 
 <body>
     <div id = "Application">
-        <div class="container">
-            <div class="board" :style = "{left: boardX + 'px'}"></div>
-            <div class="ball" :style = "{left: ballX + 'px', top: ballY + 'px'}"></div>
-            <h1 v-if = "fail" style="text-align: center;">游戏失败,您一共坚持了{{time}}秒</h1>
-        </div>
+        <my-component @myclick = "appfunc" :key = 'indexKey'></my-component>
     </div>
 
     <script>
-        const App = {
+        const App = Vue.createApp({
+            data() {
+               return{
+                 indexKey: 0
+               }
+            },
+            methods: {
+                appfunc() {
+                    this.indexKey += 1
+                }
+            }
+        })
+
+        const myComponent = {
             data() {
                return {
                     // 控制挡板位置
@@ -62,7 +74,7 @@
                     // 控制结束游戏提示的展示
                     fail:false,
                     timeStart: 0,
-                    timeEnd: 0
+                    timeEnd: 0,
                }
             },
             computed: {
@@ -126,9 +138,16 @@
                 enterKeyup() {
                     document.addEventListener("keydown", this.keydown);
                 }
-            }
+            },
+            template: `<div class="container">
+            <div class="board" :style = "{left: boardX + 'px'}"></div>
+            <div class="ball" :style = "{left: ballX + 'px', top: ballY + 'px'}"></div>
+            <h1 v-if = "fail" style="text-align: center;">游戏失败,您一共坚持了{{time}}秒</h1> 
+            <button v-if = "fail" @click = "$emit('myclick')">再来一局</button>
+        </div>`
         }
-        Vue.createApp(App).mount("#Application") 
+        App.component("my-component", myComponent);
+        App.mount("#Application") 
     </script>
 </body>
 </html>
